@@ -1,0 +1,260 @@
+.app {
+  background-color: #77787A;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, "system-ui", "Segoe UI", "Helvetica Neue", Helvetica;
+}
+
+.pane {
+  outline: none;
+  max-width: 800px;
+  margin: 0 40px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 25px 65px 0px;
+  border-radius: 24px;
+  background-color: white;
+  color: #19191a;
+  padding: 50px;
+
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.pane h1 {
+  font-size: 50px;
+  font-weight: 700;
+  margin: 0 0 40px 0;
+}
+
+.pane code {
+  font-family: Menlo, Consolas, 'Courier New', monospace;
+  color: #77787A;
+}
+
+.pane pre {
+  margin: 30px 0;
+}
+
+.pane pre code {
+  line-height: 1;
+}
+
+.pane p code, .pane ul code {
+  color: #19191a;
+  font-weight: 600;
+}
+
+.pane a {
+  color: #19191a;
+  text-decoration: underline;
+}
+
+.pane-controls {
+  margin-top: 40px;
+  display: flex;
+}
+
+.pane-controls .button {
+  color: #2356B3;
+  font-size: 20px;
+  cursor: pointer;
+  font-weight: 400;
+  display: flex;
+  flex-direction: row;
+  column-gap: 8px;
+  align-items: center;
+  outline: none;
+}
+
+.pane-controls .button:hover {
+  color: #367FEE;
+}
+
+.pane-controls .button:hover::after {
+  background-color: #367FEE;
+}
+
+.pane-controls .button::after {
+  content: "";
+  width: 0.5em;
+  height: 0.8em;
+  background-color: #2356B3;
+}
+
+.pane-controls .button.previous {
+  flex-direction: row-reverse;
+  margin-right: auto;
+}
+
+.pane-controls .button.previous::after {
+  clip-path: polygon(100% 0, 100% 100%, 0 50%);
+  justify-self: start;
+}
+
+.pane-controls .button.next {
+  justify-self: flex-end;
+  margin-left: auto;
+}
+
+.pane-controls .button.next::after {
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  justify-self: end;
+}
+
+.codeblock.hljs {
+  margin: 30px 0;
+  padding: 20px 30px;
+  border-radius: 20px;
+}
+
+.player-controls {
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  column-gap: 20px;
+}
+
+.player-controls button {
+  font-size: 18px;
+  padding: 8px 20px;
+  background-color: white;
+  color: #3e3e40;
+  font-weight: 600;
+  border-radius: 100px;
+  box-shadow: 0 1px 1px 0 rgb(0 0 0 / 4%);
+  border: 1px solid #77787A;
+  cursor: pointer;
+}
+
+.player-controls button:disabled {
+  color: #9B9C9E;
+  border: 1px solid #9B9C9E;
+  cursor: default;
+}
+
+select {
+  appearance: none;
+  outline: none;
+  background-color: transparent;
+  border: none;
+  padding: 0 1em 0 0;
+  margin: 0;
+  width: 100%;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: inherit;
+  line-height: inherit;
+}
+
+.player-controls .select {
+  font-size: 18px;
+  border-radius: 100px;
+  box-shadow: 0 1px 1px 0 rgb(0 0 0 / 4%);
+  border: 1px solid #77787A;
+  padding: 0 20px;
+  appearance: none;
+  display: grid;
+  grid-template-areas: 'select';
+  align-items: center;
+  cursor: pointer;
+  outline: none;
+}
+
+.player-controls .select::after {
+  content: "";
+  width: 0.8em;
+  height: 0.5em;
+  background-color: #3e3e40;
+  clip-path: polygon(100% 0%, 0 0%, 50% 100%);
+  justify-self: end;
+}
+
+.player-controls select, .player-controls .select::after {
+  grid-area: select;
+}
+
+.player-controls button:hover:not(:disabled), .player-controls button:active:not(:disabled) {
+  background-color: #ddd;
+}
+
+.error {
+  margin-top: 30px;
+  color: #E9483A;
+  background-color: #FAC1BB;
+  border: 1px solid #E9483A;
+  border-radius: 20px;
+  padding: 10px 20px;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0.5;
+  background-color: #3e3e40;
+}
+
+.pane.modal {
+  position: fixed;
+  max-width: 80%;
+  width: 1200px;
+  z-index: 100;
+  margin: 0;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.score {
+  position: relative;
+}
+
+.timer {
+  position: absolute;
+  border-right: 3px solid #3e3e40;
+  top: -10px;
+  bottom: -10px;
+}
+
+.track {
+  display: flex;
+  flex-direction: row;
+  margin: 20px 0;
+}
+
+.instrument {
+  font-weight: 400;
+  width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.notes {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  position: relative;
+  overflow: hidden;
+  height: 20px;
+}
+
+.note {
+  display: inline-block;
+  position: absolute;
+  background-color: #19191a;
+  height: 100%;
+  border-radius: 14px;
+}
+
+.timer-label {
+  display: inline-block;
+  width: 200px;
+}
