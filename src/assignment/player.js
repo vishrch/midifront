@@ -1,5 +1,6 @@
 import {delayAsync, buildTimer} from '../util';
 
+// play function for each track
 const playTrack = (synthesizer, track, timer) => () =>
   new Promise(async (resolve, reject) => {
     const channel = synthesizer.getChannel(track.instrumentName);
@@ -13,7 +14,7 @@ const playTrack = (synthesizer, track, timer) => () =>
           break;
         }
 
-        await delayAsync(note.duration + lastPlayedTime - timer());
+        await delayAsync(note.duration + lastPlayedTime - timer()); // delay time is calculated from buildTimer to avoid accumulated errors
 
         lastPlayedTime = lastPlayedTime + note.duration;
 
@@ -28,12 +29,12 @@ const playTrack = (synthesizer, track, timer) => () =>
 
 export const player = async (synthesizer, tracks) =>
   new Promise((resolve, reject) => {
-    const trackPromiseArray = [];
-    const timer = buildTimer();
+    const trackPromises = [];
+    const timer = buildTimer(); // init timer to avoid accumulated timer issues
 
-    tracks.forEach((track) => trackPromiseArray.push(playTrack(synthesizer, track, timer)));
+    tracks.forEach((track) => trackPromises.push(playTrack(synthesizer, track, timer))); // creating promises array for each track
 
-    Promise.all(trackPromiseArray.map((item) => item()))
+    Promise.all(trackPromises.map((trackPromise) => trackPromise())) // Using promise.all method to resolve when it completed playing all tracks
       .then(() => resolve('all track play completed'))
       .catch((error) => reject(error));
   });
