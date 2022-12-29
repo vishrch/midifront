@@ -1,28 +1,25 @@
-/*
- * Feel free to rename this file `player.ts` and remove `player.d.ts` if you are more comfortable with TypeScript.
- */
-// import workerJs from './worker.js';
-import {delayAsync} from '../util';
+import workerJs from './worker.js';
 
-// const loadWebWorker = (worker) => {
-//   const code = worker.toString();
-//   const blob = new Blob(['(' + code + ')()']);
+const loadWebWorker = (worker) => {
+  const code = worker.toString();
+  const blob = new Blob(['(' + code + ')()']);
 
-//   return new Worker(URL.createObjectURL(blob));
-// };
+  return new Worker(URL.createObjectURL(blob));
+};
 
-// const completePlay = ({worker}) => {
-//   return new Promise((resolve) => {
-//     worker.onmessage = (event) => {
-//       resolve(undefined);
-//     };
-//   });
-// };
+const completeDelay = ({worker}) => {
+  return new Promise((resolve) => {
+    worker.onmessage = (event) => {
+      resolve(undefined);
+    };
+  });
+};
 
 function playTrack(synthesizer, track) {
   const playTrackPromise = () =>
     new Promise(async (resolve, reject) => {
       const channel = synthesizer.getChannel(track.instrumentName);
+      const worker = loadWebWorker(workerJs);
 
       for (const note of track.notes) {
         const isPlaying = channel.playNote(note.name, 100);
@@ -30,10 +27,10 @@ function playTrack(synthesizer, track) {
         if (!isPlaying) {
           break;
         }
-        // worker.postMessage({duration: note.duration});
-        // await completePlay({worker});
 
-        await delayAsync(note.duration);
+        worker.postMessage({duration: note.duration});
+
+        await completeDelay({worker});
 
         channel.stopNote();
       }
@@ -42,7 +39,6 @@ function playTrack(synthesizer, track) {
     });
 
   return playTrackPromise;
-  // const worker = loadWebWorker(workerJs);
 }
 
 export async function player(synthesizer, tracks) {
