@@ -6,18 +6,19 @@
 
 let isDelaying = false;
 
-export async function delayAsync(duration: number) {
-  if (isDelaying)
-    throw new Error('delayAsync is not reentrant.');
+// export async function delayAsync(duration: number) {
+//   if (isDelaying)
+//     throw new Error('delayAsync is not reentrant.');
 
-  isDelaying = true;
+//   isDelaying = true;
 
-  return new Promise((resolve) => setTimeout(() => {
-    isDelaying = false;
-    resolve(undefined);
-  }, duration));
-}
+//   return new Promise((resolve) => setTimeout(() => {
+//     isDelaying = false;
+//     resolve(undefined);
+//   }, duration));
+// }
 
+export const delayAsync = async (timeout: number) => new Promise((res) => setTimeout(res, timeout));
 /*
  * Factory for a timer that returns the number of milliseconds since the timer was created:
  * @example
