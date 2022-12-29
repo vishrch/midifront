@@ -1,57 +1,37 @@
-import workerJs from './worker.js';
+import {delayAsync} from '../util';
 
-const loadWebWorker = (worker) => {
-  const code = worker.toString();
-  const blob = new Blob(['(' + code + ')()']);
+const playTrack = (synthesizer, track) => () =>
+  new Promise(async (resolve, reject) => {
+    const channel = synthesizer.getChannel(track.instrumentName);
 
-  return new Worker(URL.createObjectURL(blob));
-};
-
-const completeDelay = ({worker}) => {
-  return new Promise((resolve) => {
-    worker.onmessage = (event) => {
-      resolve(undefined);
-    };
-  });
-};
-
-function playTrack(synthesizer, track) {
-  const playTrackPromise = () =>
-    new Promise(async (resolve, reject) => {
-      const channel = synthesizer.getChannel(track.instrumentName);
-      const worker = loadWebWorker(workerJs);
-
-      for (const note of track.notes) {
+    for (const note of track.notes) {
+      try {
         const isPlaying = channel.playNote(note.name, 100);
 
         if (!isPlaying) {
           break;
         }
 
-        worker.postMessage({duration: note.duration});
-
-        await completeDelay({worker});
+        await delayAsync(note.duration);
 
         channel.stopNote();
+      } catch (error) {
+        reject(error);
       }
+    }
 
-      resolve('track play completed');
-    });
+    resolve('track play completed');
+  });
 
-  return playTrackPromise;
-}
-
-export async function player(synthesizer, tracks) {
-  return new Promise((resolve) => {
+export const player = async (synthesizer, tracks) =>
+  new Promise((resolve, reject) => {
     const trackPromiseArray = [];
 
     tracks.forEach((track) => {
       trackPromiseArray.push(playTrack(synthesizer, track));
     });
 
-    Promise.all(trackPromiseArray.map((item) => item())).then((values, err) => {
-      console.log(values, err);
-      resolve('all track play completed');
-    });
+    Promise.all(trackPromiseArray.map((item) => item()))
+      .then(() => resolve('all track play completed'))
+      .catch((error) => reject(error));
   });
-}

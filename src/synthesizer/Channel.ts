@@ -2,7 +2,7 @@ import {getIdFromInstrumentName} from '../instruments';
 import {Recorder} from './Recorder';
 import {JZZSynthesizerChannel, JZZSynthesizerChannelProgram} from 'jzz-synth-tiny';
 
-const DEBUG = true;
+const DEBUG = false;
 
 export class Channel {
   isPlaying: boolean;

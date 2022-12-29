@@ -4,7 +4,7 @@
  * @param duration the duration in milliseconds.
  */
 
-let isDelaying = false;
+// let isDelaying = false;
 
 // export async function delayAsync(duration: number) {
 //   if (isDelaying)
@@ -18,7 +18,9 @@ let isDelaying = false;
 //   }, duration));
 // }
 
+// delay async modified to avoid reentrant error. This can be avoided by jusing worker thread.
 export const delayAsync = async (timeout: number) => new Promise((res) => setTimeout(res, timeout));
+
 /*
  * Factory for a timer that returns the number of milliseconds since the timer was created:
  * @example
