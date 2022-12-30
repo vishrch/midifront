@@ -1,6 +1,6 @@
 import {delayAsync, buildTimer} from '../util';
 
-// play function for each track
+/** Single track play function */
 const playTrack = (synthesizer, track, timer) => () =>
   new Promise(async (resolve, reject) => {
     const channel = synthesizer.getChannel(track.instrumentName);
@@ -14,7 +14,10 @@ const playTrack = (synthesizer, track, timer) => () =>
           break;
         }
 
-        await delayAsync(note.duration + lastPlayedTime - timer()); // delay time is calculated from buildTimer to avoid accumulated errors
+        /** delayAsync reentrant issue managed by modifying delayAsync function.
+         *  It can be avoided by using worker thread method.
+         *  delay time is calculated from buildTimer to avoid accumulated errors */
+        await delayAsync(note.duration + lastPlayedTime - timer());
 
         lastPlayedTime = lastPlayedTime + note.duration;
 
@@ -27,10 +30,11 @@ const playTrack = (synthesizer, track, timer) => () =>
     resolve('track play completed');
   });
 
+/** Play function for multiple track */
 export const player = async (synthesizer, tracks) =>
   new Promise((resolve, reject) => {
     const trackPromises = [];
-    const timer = buildTimer(); // init timer to avoid accumulated timer issues
+    const timer = buildTimer(); // init timer to avoid timer accumulated issues
 
     tracks.forEach((track) => trackPromises.push(playTrack(synthesizer, track, timer))); // creating promises array for each track
 
